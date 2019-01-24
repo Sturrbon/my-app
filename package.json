@@ -28,6 +28,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "axios": "^0.18.0",
     "react-app-rewired": "^2.0.2"
-  }
+  },
+  "proxy": "http://123.206.30.183:8091"
 }
