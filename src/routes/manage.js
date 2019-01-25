@@ -1,8 +1,15 @@
-import Login from '../component/login'
+import Login from '../components/login'
+import List from '../components/list'
 
-export default const routes = [
+const routes = [
   {
     path: '/home/login',
     component: Login
+  },
+  {
+    path: '/home/list',
+    component: List
   }
 ]
+
+export default routes

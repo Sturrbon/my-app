@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd'
+import { Layout, Menu, Breadcrumb, Card } from 'antd'
 import { Route } from 'react-router-dom'
 import './App.css'
 import Home from './components/index'
+import manageRoute from './routes/manage'
 
 const { Header, Content, Footer } = Layout
 const MenuItem = Menu.Item
 const BreadcrumbItem = Breadcrumb.Item
+
 class App extends Component {
+
   componentWillMount() {
     console.log('App', this)
   }
 
   render() {
+    
+
     return (
       <Layout className="layout">
         <Header>
@@ -23,24 +28,30 @@ class App extends Component {
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
           >
-            {/* <Menu.Item key="1">nav 1</Menu.Item>
-            <Menu.Item key="2">nav 2</Menu.Item>
-            <Menu.Item key="3">nav 3</Menu.Item> */}
           </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
+          {/* <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>List</Breadcrumb.Item>
             <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
-          <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+          </Breadcrumb> */}
+          <div style={{ background: '#fff', padding: 24, minHeight: 500 }}>
+          <Card>
             <Route exact component={Home} />
+          </Card>
+          <div>
+            {manageRoute.map((route, index) => {
+              console.log(route)
+              return (
+                <div>
+                <Route key={index} exact components={`${route}['component']`} path={`${route}['path']`}></Route>
+                </div>
+              )
+            })}
+          </div>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©2018 Created by Ant UED
-        </Footer>
       </Layout>
     );
   }

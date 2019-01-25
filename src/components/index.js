@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
 import { Row, Col, Icon } from 'antd'
+import { Route } from 'react-router-dom'
+import Login from './login'
 
 class Home extends Component {
 
   handleClick = () => {
     console.log(this)
-    this.props.history.push('/login')
+    // this.props.history.push('/login')
+    return (
+      <div>
+      {/* <Route path="/home/login" component={Login} ></Route> */}
+      </div>
+    )
   }
 
   render() {
