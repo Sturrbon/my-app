@@ -1,56 +1,18 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Card } from 'antd'
-import { Route } from 'react-router-dom'
-import './App.css'
-import Home from './components/index'
-import manageRoute from './routes/manage'
+import { Layout, Card, Steps } from 'antd'
 
-const { Header, Content, Footer } = Layout
-const MenuItem = Menu.Item
-const BreadcrumbItem = Breadcrumb.Item
-
+const { Header, Content } = Layout
+const Step = Steps.Step
 class App extends Component {
-
-  componentWillMount() {
-    console.log('App', this)
-  }
-
   render() {
-    
-
     return (
       <Layout className="layout">
         <Header>
-          <div className="logo" />
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            style={{ lineHeight: '64px' }}
-          >
-          </Menu>
         </Header>
-        <Content style={{ padding: '0 50px' }}>
-          {/* <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb> */}
-          <div style={{ background: '#fff', padding: 24, minHeight: 500 }}>
-          <Card>
-            <Route exact component={Home} />
+        <Content style={{ padding: '0 50px', margin: '20px 0 0 0', minHeight: '800px' }}>
+          <Card title="欢迎访问">
+            {this.props.children}
           </Card>
-          <div>
-            {manageRoute.map((route, index) => {
-              console.log(route)
-              return (
-                <div>
-                <Route key={index} exact components={`${route}['component']`} path={`${route}['path']`}></Route>
-                </div>
-              )
-            })}
-          </div>
-          </div>
         </Content>
       </Layout>
     );

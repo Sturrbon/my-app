@@ -31,5 +31,5 @@
     "axios": "^0.18.0",
     "react-app-rewired": "^2.0.2"
   },
-  "proxy": "http://119.23.228.131:8091"
+  "proxy": "http://119.23.228.131:8091/api/jingdong"
 }
