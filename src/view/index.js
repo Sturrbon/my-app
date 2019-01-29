@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 import { Row, Col, Icon, Card } from 'antd'
-import { baseUrl } from '../config/urlconfig'
 
 class Home extends Component {
-  constructor() {
-    super()
-  }
 
   handleClick = (text) => {
-    if (text === 'tianmao' || text === 'zhifubao') {
+    if (text === 'tianmao' || text === 'zhifubao' || text === 'taobao') {
       alert('敬请期待')
       return
     }

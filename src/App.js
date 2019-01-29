@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Layout, Card, Steps } from 'antd'
+import { Layout, Card } from 'antd'
 
 const { Header, Content } = Layout
-const Step = Steps.Step
 class App extends Component {
   render() {
     return (

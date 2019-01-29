@@ -56,6 +56,7 @@ class Login extends Component {
             const status = res.code
             if (status === 200) {
               message.success(res.m)
+              this.goList(res.data)
             } else if (status === 300) {
               message.info(res.m)
               this.setState({
@@ -130,6 +131,7 @@ class Login extends Component {
           this.setState({
             dataList: res.data
           })
+          this.goList(res.data)
         }
         if (status === 300) {
           scanTimer = setInterval(() => {
@@ -172,6 +174,7 @@ class Login extends Component {
               this.setState({
                 msgModalVisible: false
               })
+              this.goList(res.data)
             } else if (status === 300) {
               message.error('服务异常')
             } else if (status === 301) {
@@ -240,6 +243,15 @@ class Login extends Component {
     }
   }
 
+  goList = (d) => {
+    this.props.history.push({
+      pathname: '/list',
+      state: {
+        data: d
+      }
+    })
+  }
+
   handleCancelScan = () => {
     this.setState({
       scanVisible: false
@@ -247,7 +259,7 @@ class Login extends Component {
   }
 
   render() {
-    const { flag, visible, scanVisible, scanSrc, scanLoading, confirmLoading, msgModalVisible, msgConfirmLoading, isScan, counter, isStop } = this.state
+    const { visible, scanVisible, scanSrc, scanLoading, confirmLoading, msgModalVisible, msgConfirmLoading, isScan, counter, isStop } = this.state
     const { getFieldDecorator } = this.props.form
     const modalTitle = isScan ? '二维码登录' : '账户登录'
     const buttonText = isStop ? (counter + '秒后可再次获取验证码') : '获取验证码'
@@ -285,7 +297,7 @@ class Login extends Component {
         <div style={{ textAlign: 'center' }}>
           <Spin spinning={scanLoading}>
             <div>
-              <img style={{width: '200px'}} src={scanSrc} />
+              <img alt='二维码' style={{width: '200px'}} src={scanSrc} />
             </div>
           </Spin>
         </div>
