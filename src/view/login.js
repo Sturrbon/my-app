@@ -51,7 +51,8 @@ class Login extends Component {
         })
         const params = value
         params.token = 'cdddef32b7ec4be9926d30f545e76c37'
-        axios.post( this.state.baseUrl + '/login', params).then(res => {
+        // this.state.baseUrl + 
+        axios.post('/login', params).then(res => {
           if (res && res.code) {
             const status = res.code
             if (status === 200) {
@@ -95,7 +96,7 @@ class Login extends Component {
       scanVisible: true,
       scanLoading: true
     })
-    axios.get( this.state.baseUrl + '/getqrcode', { params: {
+    axios.get('/getqrcode', { params: {
       token: 'cdddef32b7ec4be9926d30f545e76c37'
     } }).then(res => {
       if (res) {
@@ -117,7 +118,7 @@ class Login extends Component {
   // 验证二维码
   scanCheck = () => {
     clearInterval(scanTimer)
-    axios.get( this.state.baseUrl+'/verifyqrcode', {params:{
+    axios.get('/verifyqrcode', {params:{
       reqId: this.state.scanId,
       token: 'cdddef32b7ec4be9926d30f545e76c37'
     }}).then(res => {
@@ -162,7 +163,7 @@ class Login extends Component {
           msgConfirmLoading: true
         })
         const reqId = this.state.msgCodeId
-        axios.get(this.state.baseUrl+'/verifycode', { params: {
+        axios.get('/verifycode', { params: {
           'token': 'cdddef32b7ec4be9926d30f545e76c37',
           'reqId':reqId,
           'code': values.code
@@ -208,7 +209,7 @@ class Login extends Component {
       this.setState({
         isStop: true
       })
-      axios.get(`${this.state.baseUrl}/getcode`, { params: {
+      axios.get(`/getcode`, { params: {
         reqId: this.state.msgCodeId,
         token: 'cdddef32b7ec4be9926d30f545e76c37'
       }}).then(res => {
@@ -253,6 +254,7 @@ class Login extends Component {
   }
 
   handleCancelScan = () => {
+    clearInterval(scanTimer)
     this.setState({
       scanVisible: false
     })
