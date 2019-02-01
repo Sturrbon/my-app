@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Form, Button, Spin, Input, Row, Col, Card, message } from 'antd'
 import axios from '../axios'
-import { baseUrl } from '../config/urlconfig'
 
 const FormItem = Form.Item
 let timer = null
@@ -23,7 +22,6 @@ class Login extends Component {
       msgCodeId: '',
       scanId: '',
       flag: '',
-      baseUrl: '',
       dataList: {}
     }
   }
@@ -31,10 +29,9 @@ class Login extends Component {
   componentDidMount() {
     if (this.props.location && this.props.location.state) {
       this.setState({
-        flag: this.props.location.state.flag,
-        baseUrl: baseUrl[this.props.location.state.flag]['baseUrl']
+        flag: this.props.location.state.flag
       }, () => {
-        console.log(this.state.baseUrl)
+        console.log(this.state.flag)
       })
     } else {
       this.props.history.push('/')
@@ -52,7 +49,7 @@ class Login extends Component {
         const params = value
         params.token = 'cdddef32b7ec4be9926d30f545e76c37'
         // this.state.baseUrl + 
-        axios.post('/login', params).then(res => {
+        axios.post( this.state.flag+'/login', params).then(res => {
           if (res && res.code) {
             const status = res.code
             if (status === 200) {
@@ -88,7 +85,7 @@ class Login extends Component {
     })
   }
 
-  // 二维码登录
+  // 获取二维码
   handleScan = () => {
     clearInterval(scanTimer)
     this.setState({
@@ -96,7 +93,7 @@ class Login extends Component {
       scanVisible: true,
       scanLoading: true
     })
-    axios.get('/getqrcode', { params: {
+    axios.get(this.state.flag+'/getqrcode', { params: {
       token: 'cdddef32b7ec4be9926d30f545e76c37'
     } }).then(res => {
       if (res) {
@@ -118,7 +115,7 @@ class Login extends Component {
   // 验证二维码
   scanCheck = () => {
     clearInterval(scanTimer)
-    axios.get('/verifyqrcode', {params:{
+    axios.get(this.state.flag+'/verifyqrcode', {params:{
       reqId: this.state.scanId,
       token: 'cdddef32b7ec4be9926d30f545e76c37'
     }}).then(res => {
@@ -163,7 +160,7 @@ class Login extends Component {
           msgConfirmLoading: true
         })
         const reqId = this.state.msgCodeId
-        axios.get('/verifycode', { params: {
+        axios.get(this.state.flag+'/verifycode', { params: {
           'token': 'cdddef32b7ec4be9926d30f545e76c37',
           'reqId':reqId,
           'code': values.code
@@ -209,7 +206,7 @@ class Login extends Component {
       this.setState({
         isStop: true
       })
-      axios.get(`/getcode`, { params: {
+      axios.get(this.state.flag+`/getcode`, { params: {
         reqId: this.state.msgCodeId,
         token: 'cdddef32b7ec4be9926d30f545e76c37'
       }}).then(res => {

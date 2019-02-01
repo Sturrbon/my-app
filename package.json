@@ -6,6 +6,7 @@
     "antd": "^3.12.4",
     "babel-plugin-import": "^1.11.0",
     "customize-cra": "^0.2.9",
+    "http-proxy-middleware": "^0.19.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-json-pretty": "^2.0.0",
@@ -31,6 +32,5 @@
   "devDependencies": {
     "axios": "^0.18.0",
     "react-app-rewired": "^2.0.2"
-  },
-  "proxy": "http://119.23.228.131:8091/api/jingdong"
+  }
 }

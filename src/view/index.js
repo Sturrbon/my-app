@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Row, Col, Icon, Card } from 'antd'
-
 class Home extends Component {
 
   handleClick = (text) => {
-    if (text === 'tianmao' || text === 'zhifubao' || text === 'taobao') {
+    if (text === 'yidong' || text === 'liantong' || text === 'dianxin') {
       alert('敬请期待')
       return
     }
@@ -15,9 +14,10 @@ class Home extends Component {
       }
     })
   }
+
   render() {
     const IconFont = Icon.createFromIconfontCN({
-      scriptUrl: '//at.alicdn.com/t/font_1026098_0o6ylv7gwbb.js'
+      scriptUrl: '//at.alicdn.com/t/font_1026098_s7ru6655vhj.js'
     })
     return (
       <div style={{ textAlign: 'center', fontSize: 40, background: '#ECECEC', padding: '30px' }}>
@@ -25,16 +25,21 @@ class Home extends Component {
           <Col onClick={this.handleClick.bind(this, 'jingdong')} span={12}>
             <Card hoverable={true} title="京东" bordered={false}><IconFont style={{ fontSize: '40px' }} type="icon-jingdong" /></Card>
           </Col>
-          <Col onClick={this.handleClick.bind(this, 'tianmao')} span={12}>
-            <Card title="天猫（尽请期待）" bordered={false}><IconFont style={{ fontSize: '40px' }} type="icon-tianmaot" /></Card>
+          <Col onClick={this.handleClick.bind(this, 'taobao')} span={12}>
+            <Card title="淘宝（天猫、支付宝）" bordered={false}><Icon style={{ fontSize: '40px' }} type="taobao" /></Card>
           </Col>
         </Row>
         <Row gutter={16}>
-          <Col onClick={this.handleClick.bind(this, 'taobao')} span={12}>
-            <Card title="淘宝（尽请期待）"><Icon style={{ fontSize: '40px' }} type="taobao" /></Card>
+          <Col onClick={this.handleClick.bind(this, 'yidong')} span={12}>
+            <Card title="移动（尽请期待）"><IconFont style={{ fontSize: '40px' }} type="icon-yidong" /></Card>
           </Col>
-          <Col onClick={this.handleClick.bind(this, 'zhifubao')} span={12}>
-            <Card title="支付宝（尽请期待）"><Icon style={{ fontSize: '40px' }} type="alipay" /></Card>
+          <Col onClick={this.handleClick.bind(this, 'liantong')} span={12}>
+            <Card title="联通（尽请期待）"><IconFont style={{ fontSize: '40px' }} type="icon-liantonglogo" /></Card>
+          </Col>
+        </Row>
+        <Row gutter={16} style={{marginTop: '30px'}}>
+          <Col onClick={this.handleClick.bind(this, 'dianxin')} span={24}>
+            <Card title="电信（尽请期待）"><IconFont style={{ fontSize: '40px' }} type="icon-dianxinlogo" /></Card>
           </Col>
         </Row>
       </div>
