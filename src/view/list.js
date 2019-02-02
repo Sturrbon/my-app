@@ -18,7 +18,7 @@ class List extends Component {
         data: this.props.location.state.data
       })
     } else {
-      this.props.history('/')
+      this.props.history.push('/')
     }
   }
 

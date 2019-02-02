@@ -19,27 +19,43 @@ class Home extends Component {
     const IconFont = Icon.createFromIconfontCN({
       scriptUrl: '//at.alicdn.com/t/font_1026098_s7ru6655vhj.js'
     })
+    const colLayout = {
+      xs: 12,
+      sm: 12
+    }
     return (
-      <div style={{ textAlign: 'center', fontSize: 40, background: '#ECECEC', padding: '30px' }}>
-        <Row gutter={16} style={{ marginBottom: '30px'}}>
-          <Col onClick={this.handleClick.bind(this, 'jingdong')} span={12}>
-            <Card hoverable={true} title="京东" bordered={false}><IconFont style={{ fontSize: '40px' }} type="icon-jingdong" /></Card>
+      <div style={{ textAlign: 'center', fontSize: 18, background: '#ECECEC', padding: '10px' }}>
+        <Row gutter={6} style={{ marginBottom: '30px'}}>
+          <Col onClick={this.handleClick.bind(this, 'jingdong')} {...colLayout}>
+            <Card style={{height: '220px'}}  hoverable={true} title="京东" bordered={false}>
+              <p style={{height: '40px'}}>京东一键查询</p>
+              <IconFont style={{ fontSize: '40px', padding: '10px 0' }} type="icon-jingdong" />
+            </Card>
           </Col>
-          <Col onClick={this.handleClick.bind(this, 'taobao')} span={12}>
-            <Card title="淘宝（天猫、支付宝）" bordered={false}><Icon style={{ fontSize: '40px' }} type="taobao" /></Card>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col onClick={this.handleClick.bind(this, 'yidong')} span={12}>
-            <Card title="移动（尽请期待）"><IconFont style={{ fontSize: '40px' }} type="icon-yidong" /></Card>
-          </Col>
-          <Col onClick={this.handleClick.bind(this, 'liantong')} span={12}>
-            <Card title="联通（尽请期待）"><IconFont style={{ fontSize: '40px' }} type="icon-liantonglogo" /></Card>
+          <Col onClick={this.handleClick.bind(this, 'taobao')} {...colLayout}>
+            <Card style={{height: '220px'}} title="淘宝" bordered={false}>
+              <p style={{height: '40px'}}>淘宝&天猫&支付宝一键查询</p>
+              <Icon style={{ fontSize: '40px', padding: '10px 0' }} type="taobao" />
+            </Card>
           </Col>
         </Row>
-        <Row gutter={16} style={{marginTop: '30px'}}>
+        <Row gutter={6}>
+          <Col onClick={this.handleClick.bind(this, 'yidong')} {...colLayout}>
+            <Card title="移动">
+              <p>敬请期待</p>
+              <IconFont style={{ fontSize: '40px' }} type="icon-yidong" />
+            </Card>
+          </Col>
+          <Col onClick={this.handleClick.bind(this, 'liantong')} {...colLayout}>
+            <Card title="联通">
+              <p>敬请期待</p>
+              <IconFont style={{ fontSize: '40px' }} type="icon-liantonglogo" />
+            </Card>
+          </Col>
+        </Row>
+        <Row style={{marginTop: '30px'}}>
           <Col onClick={this.handleClick.bind(this, 'dianxin')} span={24}>
-            <Card title="电信（尽请期待）"><IconFont style={{ fontSize: '40px' }} type="icon-dianxinlogo" /></Card>
+            <Card title="电信"><IconFont style={{ fontSize: '40px' }} type="icon-dianxinlogo" /></Card>
           </Col>
         </Row>
       </div>

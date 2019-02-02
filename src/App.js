@@ -8,7 +8,7 @@ class App extends Component {
       <Layout className="layout">
         <Header>
         </Header>
-        <Content style={{ padding: '0 50px', margin: '20px 0 0 0', minHeight: '800px' }}>
+        <Content style={{ padding: '0 10px', margin: '20px 0 0 0', minHeight: '800px' }}>
           <Card title="欢迎访问">
             {this.props.children}
           </Card>
