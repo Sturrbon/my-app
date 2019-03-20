@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Modal, Form, Button, Spin, Input, Row, Col, Card, message } from 'antd'
 import axios from '../axios'
 
@@ -11,6 +12,8 @@ class Login extends Component {
     this.state = {
       visible: false,
       msgModalVisible: false,
+      operateVisible: false,
+      operateConfirmLoading: false,
       msgConfirmLoading: false,
       confirmLoading: false,
       scanLoading: false,
@@ -22,6 +25,8 @@ class Login extends Component {
       msgCodeId: '',
       scanId: '',
       flag: '',
+      reqId: '',
+      phone: '',
       dataList: {}
     }
   }
@@ -30,9 +35,14 @@ class Login extends Component {
     if (this.props.location && this.props.location.state) {
       this.setState({
         flag: this.props.location.state.flag
-      }, () => {
-        console.log(this.state.flag)
       })
+      if (this.props.location.state.flag === 'telecom') {
+        this.setState({
+          reqId: this.props.location.state.reqId,
+          phone: this.props.location.state.phone,
+          visible: true
+        })
+      }
     } else {
       this.props.history.push('/')
     }
@@ -48,8 +58,31 @@ class Login extends Component {
         })
         const params = value
         params.token = 'cdddef32b7ec4be9926d30f545e76c37'
-        // this.state.baseUrl + 
-        axios.post( this.state.flag+'/login', params).then(res => {
+        if (this.state.flag === 'telecom') {
+          params.reqId = this.state.reqId
+          axios.post( this.state.flag+'/login_submit', params).then(res => {
+            console.log(res)
+            if (res.data.phaseStatus === 'LOGIN_SUCCESS') {
+              if (this.state.flag === 'telecom') {
+                const teleParam = {
+                  name: this.state.phone,
+                  token: 'cdddef32b7ec4be9926d30f545e76c37',
+                  reqId: this.state.reqId
+                }
+                axios.post(this.state.flag+'/refresh_sms_code', teleParam).then(sres => {
+                  const res = JSON.parse(sres)
+                  if (sres.Response.ResponseData.ResultDesc === '操作成功') {
+                    message.success('验证码已发送')
+                    this.setState({
+                      operateVisible: true
+                    })
+                  }
+                })
+              }
+            }
+          })
+        } else {
+          axios.post( this.state.flag+'/login', params).then(res => {
           if (res && res.code) {
             const status = res.code
             if (status === 200) {
@@ -72,9 +105,10 @@ class Login extends Component {
           this.setState({
             confirmLoading: false
           })
-        }).catch(err => {
-          console.log(err)
-        })
+          }).catch(err => {
+            console.log(err)
+          })
+        }
       }
     })
   }
@@ -83,6 +117,9 @@ class Login extends Component {
     this.setState({
       visible: false
     })
+    if (this.state.flag === 'telecom') {
+      this.props.history.push('/')
+    }
   }
 
   // 获取二维码
@@ -257,11 +294,82 @@ class Login extends Component {
     })
   }
 
+  handleOkOperate = (e) => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (err) message.error(err)
+      const params = {
+        ...values,
+        reqId: this.state.reqId,
+        token: 'cdddef32b7ec4be9926d30f545e76c37'
+      }
+      axios.post(`${this.state.flag}/code_submit`, params).then(res => {
+        if (res.retMsg === '成功') {
+          let i = 0
+          while (i < 100) {
+            axios.post(`${this.state.flag}/get_status`, {reqId: this.state.reqId, token: 'cdddef32b7ec4be9926d30f545e76c37'}).then(sres => {
+              if (res.data.phaseStatus === 'SUCCESS') {
+                axios.post(`${this.state.flag}/get_result`, {name: this.state.phone, reqId: this.state.reqId, token: 'cdddef32b7ec4be9926d30f545e76c37'}).then(ssres => {
+                  console.log(ssres)  
+                  i = 100
+                })
+              } else {
+                i++
+              }
+            })
+          }
+        }
+      })
+    })
+  }
+
+  handleCancelOperate = () => {
+    this.setState({
+      operateVisible: false
+    })
+  }
+
   render() {
     const { visible, scanVisible, scanSrc, scanLoading, confirmLoading, msgModalVisible, msgConfirmLoading, isScan, counter, isStop } = this.state
+    const { operateVisible, operateConfirmLoading } = this.state
     const { getFieldDecorator } = this.props.form
     const modalTitle = isScan ? '二维码登录' : '账户登录'
     const buttonText = isStop ? (counter + '秒后可再次获取验证码') : '获取验证码'
+    const operateModal = (
+      <Modal
+        title="请填写以下信息"
+        visible={operateVisible}
+        confirmLoading={operateConfirmLoading}
+        okText="确认"
+        cancelText="取消"
+        onOk={this.handleOkOperate}
+        onCancel={this.handleCancelOperate}
+      >
+        <Form>
+          <FormItem label="姓名">
+            {getFieldDecorator('sfzname', {
+              rules: [{ required: true, message: '请填写姓名'}]
+            })(
+              <Input type="text" />
+            )}
+          </FormItem>
+          <FormItem label="身份证号码">
+            {getFieldDecorator('idcard', {
+              rules: [{ required: true, message: '请填写身份证号码'}]
+            })(
+              <Input type="text" />
+            )}
+          </FormItem>
+          <FormItem label="手机验证码">
+            {getFieldDecorator('code', {
+              rules: [{ required: true, message: '请填写验证码'}]
+            })(
+              <Input type="text" />
+            )}
+          </FormItem>
+        </Form>
+      </Modal>
+    )
     const msgModal = (
       <Modal
         title="请填写短信验证码"
@@ -317,6 +425,7 @@ class Login extends Component {
         </Row>
         {msgModal}
         {scanModal}
+        {operateModal}
         <Modal
           title={modalTitle}
           confirmLoading={confirmLoading}
@@ -354,4 +463,10 @@ class Login extends Component {
   }
 }
 
-export default Form.create()(Login)
+const mapStateToProps = state => {
+  return {
+    platform: state.platform
+  }
+}
+
+export default connect(mapStateToProps, null)(Form.create()(Login))
