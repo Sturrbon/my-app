@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Form, Button, Spin, Input, Row, Col, Card, message } from 'antd'
 import axios from '../axios'
+import { sleep } from '../util'
 
 const FormItem = Form.Item
 let timer = null
@@ -70,7 +71,7 @@ class Login extends Component {
                   reqId: this.state.reqId
                 }
                 axios.post(this.state.flag+'/refresh_sms_code', teleParam).then(sres => {
-                  const res = JSON.parse(sres)
+                  sres = JSON.parse(sres)
                   if (sres.Response.ResponseData.ResultDesc === '操作成功') {
                     message.success('验证码已发送')
                     this.setState({
@@ -296,29 +297,64 @@ class Login extends Component {
 
   handleOkOperate = (e) => {
     e.preventDefault()
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (err) message.error(err)
-      const params = {
-        ...values,
-        reqId: this.state.reqId,
-        token: 'cdddef32b7ec4be9926d30f545e76c37'
-      }
-      axios.post(`${this.state.flag}/code_submit`, params).then(res => {
-        if (res.retMsg === '成功') {
-          let i = 0
-          while (i < 100) {
-            axios.post(`${this.state.flag}/get_status`, {reqId: this.state.reqId, token: 'cdddef32b7ec4be9926d30f545e76c37'}).then(sres => {
-              if (res.data.phaseStatus === 'SUCCESS') {
-                axios.post(`${this.state.flag}/get_result`, {name: this.state.phone, reqId: this.state.reqId, token: 'cdddef32b7ec4be9926d30f545e76c37'}).then(ssres => {
-                  console.log(ssres)  
-                  i = 100
-                })
-              } else {
-                i++
-              }
-            })
+      const result = await this.getSubmitCode(values)
+      if (result === 'done') {
+        for (let i = 0; i < 100; i++) {
+          await sleep(2000)
+          const res = await this.getStatus()
+          if (res === 'done') {
+            break;
+          } else {
+            i++;
           }
         }
+      }
+    })
+  }
+
+  getSubmitCode = (value) => {
+    return new Promise(resolve => {
+      axios.post(`${this.state.flag}/code_submit`, {
+        ...value,
+        reqId: this.state.reqId,
+        token: 'cdddef32b7ec4be9926d30f545e76c37'
+      }).then(res => {
+        if (res.retMsg === '成功') {
+          resolve('success')
+        }
+      })
+    })
+  }
+
+  getStatus = () => {
+    return new Promise(resolve => {
+      axios.post(`${this.state.flag}/get_status`, {
+        reqId: this.state.reqId,
+        token: 'cdddef32b7ec4be9926d30f545e76c37'
+      }).then(async res => {
+        if (res.data.phaseStatus === 'SUCCESS') {
+          const result = await this.getResult();
+          if (result === 'done') {
+            resolve('done');
+          } else {
+            resolve('wait')
+          }
+        }
+      })
+    })
+  }
+
+  getResult = () => {
+    return new Promise(resolve => {
+      axios.post(`${this.state.flag}/get_result`, {
+        name: this.state.phone, 
+        reqId: this.state.reqId, 
+        token: 'cdddef32b7ec4be9926d30f545e76c37'
+      }).then(res => {
+        console.log(res);
+        resolve('done')
       })
     })
   }
